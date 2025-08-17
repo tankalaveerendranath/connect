@@ -49,7 +49,7 @@ const WelcomeCard: React.FC<WelcomeCardProps> = ({ onCreatePost }) => {
         
         <h1 className="text-4xl font-bold mb-4">Welcome to ConnectSphere</h1>
         <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-          The professional social media platform designed for modern professionals. 
+          The professional social media platform designed for modern professionals.
           Connect, collaborate, and grow your career in a secure environment.
         </p>
         
@@ -59,7 +59,7 @@ const WelcomeCard: React.FC<WelcomeCardProps> = ({ onCreatePost }) => {
           onClick={onCreatePost}
           className="px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:shadow-xl transition-all duration-200"
         >
-          Get Started Today
+          Sign Up to Get Started
         </motion.button>
       </motion.div>
 

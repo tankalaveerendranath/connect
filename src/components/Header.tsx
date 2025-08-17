@@ -64,10 +64,10 @@ const Header: React.FC<HeaderProps> = ({
             whileTap={{ scale: 0.95 }}
           >
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">C</span>
+              <span className="text-white font-bold text-lg">S</span>
             </div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-              ConnectSphere
+              SocialHub
             </h1>
           </motion.div>
 
@@ -211,7 +211,7 @@ const Header: React.FC<HeaderProps> = ({
                   onClick={onLogin}
                   className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all duration-200"
                 >
-                  Get Started
+                  <strong>Demo:</strong> Create a new account or try: alex@techcorp.com
                 </motion.button>
               </div>
             )}

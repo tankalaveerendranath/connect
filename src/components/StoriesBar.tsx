@@ -12,6 +12,7 @@ interface StoriesBarProps {
 }
 
 const StoriesBar: React.FC<StoriesBarProps> = ({ stories, users, currentUser, onUserClick, onCreateStory }) => {
+  // Get unique users who have stories
   const storyUsers = stories.reduce((acc, story) => {
     const user = users.find(u => u.id === story.userId);
     if (user && !acc.find(u => u.id === user.id)) {
@@ -22,8 +23,36 @@ const StoriesBar: React.FC<StoriesBarProps> = ({ stories, users, currentUser, on
 
   const hasCurrentUserStory = stories.some(story => story.userId === currentUser.id);
 
+  // If no stories available, show a message
+  if (stories.length === 0) {
+    return (
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200/50 p-6">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl">📸</span>
+          </div>
+          <h3 className="font-semibold text-slate-900 mb-2">No Stories Yet</h3>
+          <p className="text-slate-500 text-sm mb-4">Be the first to share your story!</p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onCreateStory}
+            className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-medium hover:shadow-lg transition-all duration-200"
+          >
+            Create Story
+          </motion.button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-200/50 p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-semibold text-slate-900">Stories</h3>
+        <span className="text-sm text-slate-500">{stories.length} active</span>
+      </div>
+      
       <div className="flex space-x-4 overflow-x-auto pb-2">
         {/* Add Story */}
         <motion.div

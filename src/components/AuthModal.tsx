@@ -6,7 +6,7 @@ import { User } from '../types';
 interface AuthModalProps {
   mode: 'login' | 'signup';
   onClose: () => void;
-  onLogin: (user: User) => void;
+  onLogin: (user: User, isNewUser?: boolean) => void;
   onSwitchMode: (mode: 'login' | 'signup') => void;
   users: User[];
 }
@@ -14,6 +14,7 @@ interface AuthModalProps {
 const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onLogin, onSwitchMode, users }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -27,14 +28,31 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onLogin, onSwitchM
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
 
     // Simulate API call
     setTimeout(() => {
       if (mode === 'login') {
-        // For demo, use existing user or create a demo user
-        const existingUser = users.find(u => u.email === formData.email) || users[0];
-        onLogin(existingUser);
+        // Check if user exists
+        const existingUser = users.find(u => u.email === formData.email);
+        if (existingUser) {
+          // In a real app, you'd verify the password here
+          onLogin(existingUser, false);
+        } else {
+          setError('Account not found. Please sign up first.');
+          setIsLoading(false);
+          return;
+        }
       } else {
+        // Check if user already exists
+        const existingUser = users.find(u => u.email === formData.email);
+        if (existingUser) {
+          setError('Account already exists. Please sign in instead.');
+          setIsLoading(false);
+          return;
+        }
+        
+        // Create new user
         const newUser: User = {
           id: Date.now().toString(),
           username: formData.email.split('@')[0],
@@ -58,7 +76,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onLogin, onSwitchM
           interests: [],
           skills: []
         };
-        onLogin(newUser);
+        onLogin(newUser, true);
       }
       setIsLoading(false);
     }, 1500);
@@ -107,6 +125,17 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onLogin, onSwitchM
               <X className="h-6 w-6" />
             </motion.button>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl"
+            >
+              <p className="text-red-600 text-sm">{error}</p>
+            </motion.div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -163,7 +192,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onLogin, onSwitchM
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full pl-12 pr-4 py-4 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 bg-slate-50/50"
-                  placeholder="john@company.com"
+                  placeholder={mode === 'login' ? 'Enter your email' : 'john@company.com'}
                   required
                 />
               </div>
@@ -183,7 +212,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onLogin, onSwitchM
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full pl-12 pr-14 py-4 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 bg-slate-50/50"
-                  placeholder="Enter your password"
+                  placeholder={mode === 'login' ? 'Enter your password' : 'Create a password'}
                   required
                 />
                 <button
@@ -277,12 +306,21 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onLogin, onSwitchM
             <p className="text-slate-600">
               {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}
               <button
+                type="button"
                 onClick={() => onSwitchMode(mode === 'login' ? 'signup' : 'login')}
                 className="ml-2 text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200"
               >
                 {mode === 'login' ? 'Sign up' : 'Sign in'}
               </button>
             </p>
+            
+            {mode === 'login' && (
+              <div className="mt-4 p-4 bg-blue-50 rounded-xl">
+                <p className="text-sm text-blue-700">
+                  <strong>Demo:</strong> Use any email to create an account, or sign in with an existing demo account.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </motion.div>

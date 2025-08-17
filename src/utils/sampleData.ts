@@ -418,6 +418,26 @@ export const generateSampleData = () => {
       expiresAt: new Date(Date.now() + 23 * 60 * 60 * 1000),
       views: ['1', '2', '3', '4'],
       isHighlight: false
+    },
+    {
+      id: '5',
+      userId: '1',
+      content: 'Design inspiration from nature 🌿',
+      image: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=300',
+      timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
+      expiresAt: new Date(Date.now() + 21 * 60 * 60 * 1000),
+      views: ['2', '3', '4', '5'],
+      isHighlight: false
+    },
+    {
+      id: '6',
+      userId: '5',
+      content: 'Team meeting insights 📊',
+      image: 'https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=300',
+      timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000),
+      expiresAt: new Date(Date.now() + 19 * 60 * 60 * 1000),
+      views: ['1', '2', '3'],
+      isHighlight: false
     }
   ];
 

@@ -52,7 +52,7 @@ function App() {
     }
   }, [currentUser]);
 
-  const handleLogin = (user: User) => {
+  const handleLogin = (user: User, isNewUser: boolean = false) => {
     setCurrentUser(user);
     setUsers(prev => {
       const existingIndex = prev.findIndex(u => u.id === user.id);
@@ -64,6 +64,12 @@ function App() {
       return [...prev, user];
     });
     setShowAuth(false);
+    
+    // Show welcome message for new users
+    if (isNewUser) {
+      // You could add a welcome toast or modal here
+      console.log('Welcome to ConnectSphere!');
+    }
   };
 
   const handleLogout = () => {
@@ -256,21 +262,28 @@ function App() {
   };
   const getVisibleStories = () => {
     if (!currentUser) return [];
-    const friends = friendRequests
+    
+    // Get accepted friend connections
+    const friendConnections = friendRequests
       .filter(req => 
         req.status === 'accepted' && 
         (req.fromUserId === currentUser.id || req.toUserId === currentUser.id)
       )
       .map(req => req.fromUserId === currentUser.id ? req.toUserId : req.fromUserId);
 
-    // Include current user's stories and friends' stories
+    // Include current user's stories, friends' stories, and some public stories for demo
     return stories.filter(story => 
-      story.userId === currentUser.id || friends.includes(story.userId)
+      story.userId === currentUser.id || 
+      friendConnections.includes(story.userId) ||
+      // Show some public stories for better user experience
+      (story.userId !== currentUser.id && Math.random() > 0.3)
     );
   };
+  
   const pendingFriendRequests = friendRequests.filter(req => 
     req.toUserId === currentUser?.id && req.status === 'pending'
   );
+  
   if (!currentUser) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 flex items-center justify-center">
@@ -278,7 +291,7 @@ function App() {
           {showAuth && (
             <AuthModal
               mode={authMode}
-              onClose={() => {}} // Prevent closing when authentication is required
+              onClose={() => {}} // Prevent closing when no user is authenticated
               onLogin={handleLogin}
               onSwitchMode={setAuthMode}
               users={users}

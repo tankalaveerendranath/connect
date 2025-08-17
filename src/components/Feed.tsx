@@ -35,13 +35,15 @@ const Feed: React.FC<FeedProps> = ({
   return (
     <div className="space-y-6">
       {/* Stories */}
-      <StoriesBar 
-        stories={stories}
-        users={users}
-        currentUser={currentUser}
-        onUserClick={onUserClick}
-        onCreateStory={onCreateStory}
-      />
+      {currentUser && (
+        <StoriesBar 
+          stories={stories}
+          users={users}
+          currentUser={currentUser}
+          onUserClick={onUserClick}
+          onCreateStory={onCreateStory}
+        />
+      )}
 
       {/* Posts */}
       <div className="space-y-6">
